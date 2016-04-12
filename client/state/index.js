@@ -11,6 +11,7 @@ import application from './application/reducer';
 import jetpackConnect from './jetpack-connect/reducer';
 import page from './page/reducer';
 import notices from './notices/reducer';
+import preview from './preview/reducer';
 import posts from './posts/reducer';
 import postTypes from './post-types/reducer';
 import plugins from './plugins/reducer';
@@ -37,6 +38,7 @@ export const reducer = combineReducers( {
 	application,
 	page,
 	notices,
+	preview,
 	posts,
 	postTypes,
 	receipts,
