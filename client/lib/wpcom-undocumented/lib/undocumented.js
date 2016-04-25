@@ -948,8 +948,10 @@ Undocumented.prototype.fetchPreviewMarkup = function( siteId, slug, postData ) {
 	return new Promise( ( resolve, reject ) => {
 		const endpoint = `/sites/${siteId}/previews/mine`;
 		const query = { path: slug };
-		if ( postData && Object.keys( postData ).length > 0 ) {
-			return this.wpcom.req.post( endpoint, query, { customized: postData } )
+		const isPreviewCustomized = ( postData && Object.keys( postData ).length > 0 );
+		const { post, get } = this.wpcom.req;
+		const request = isPreviewCustomized ? post( endpoint, query, { customized: postData } ) : get( endpoint, query );
+		request
 			.then( response => {
 				if ( ! response.html ) {
 					return reject( new Error( 'No markup received from API' ) );
@@ -957,15 +959,6 @@ Undocumented.prototype.fetchPreviewMarkup = function( siteId, slug, postData ) {
 				resolve( response.html );
 			} )
 			.catch( reject );
-		}
-		this.wpcom.req.get( endpoint, query )
-		.then( response => {
-			if ( ! response.html ) {
-				return reject( new Error( 'No markup received from API' ) );
-			}
-			resolve( response.html );
-		} )
-		.catch( reject );
 	} );
 };
 
