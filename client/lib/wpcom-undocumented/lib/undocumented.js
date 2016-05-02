@@ -949,8 +949,7 @@ Undocumented.prototype.fetchPreviewMarkup = function( siteId, slug, postData ) {
 		const endpoint = `/sites/${siteId}/previews/mine`;
 		const query = { path: slug };
 		const isPreviewCustomized = ( postData && Object.keys( postData ).length > 0 );
-		const { post, get } = this.wpcom.req;
-		const request = isPreviewCustomized ? post( endpoint, query, { customized: postData } ) : get( endpoint, query );
+		const request = isPreviewCustomized ? this.wpcom.req.post( endpoint, query, { customized: postData } ) : this.wpcom.req.get( endpoint, query );
 		request
 			.then( response => {
 				if ( ! response.html ) {
