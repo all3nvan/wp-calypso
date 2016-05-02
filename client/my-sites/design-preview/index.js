@@ -59,8 +59,8 @@ const DesignPreview = React.createClass( {
 	},
 
 	componentDidUpdate( prevProps ) {
-		// If there is no markup, fetch it
-		if ( ! this.props.previewMarkup ) {
+		// If there is no markup or the site has changed, fetch it
+		if ( ! this.props.previewMarkup || this.props.selectedSiteId !== prevProps.selectedSiteId ) {
 			this.loadPreview();
 		}
 		// If the customizations have been removed, restore the original markup
