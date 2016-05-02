@@ -161,6 +161,11 @@ module.exports = React.createClass( {
 		);
 	},
 
+	onCustomize: function( event ) {
+		event.preventDefault();
+		this.props.layoutFocus.set( 'preview' );
+	},
+
 	themes: function() {
 		var site = this.getSelectedSite(),
 			jetpackEnabled = config.isEnabled( 'manage/themes-jetpack' ),
@@ -210,7 +215,7 @@ module.exports = React.createClass( {
 				icon="themes"
 				preloadSectionName="themes"
 			>
-				<SidebarButton href={ getCustomizeUrl( null, site ) } preloadSectionName="customize">
+				<SidebarButton href={ getCustomizeUrl( null, site ) } onClick={ this.onCustomize } preloadSectionName="customize">
 					{ this.translate( 'Customize' ) }
 				</SidebarButton>
 			</SidebarItem>
