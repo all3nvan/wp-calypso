@@ -64,19 +64,27 @@ const DesignPreview = React.createClass( {
 			this.loadPreview();
 		}
 		// If the customizations have been removed, restore the original markup
-		if ( this.props.previewMarkup && this.props.customizations && this.props.previewMarkup === prevProps.previewMarkup && prevProps.customizations ) {
-			if ( Object.keys( this.props.customizations ).length === 0 && Object.keys( prevProps.customizations ).length > 0 ) {
-				debug( 'restoring original markup' );
-				// Force the initial markup to be restored because the DOM may have been
-				// changed, and simply not applying customizations will not restore it.
-				this.loadPreview();
-			}
+		if ( this.haveCustomizationsBeenRemoved( prevProps ) ) {
+			// Force the initial markup to be restored because the DOM may have been
+			// changed, and simply not applying customizations will not restore it.
+			debug( 'restoring original markup' );
+			this.loadPreview();
 		}
 		// Apply customizations
 		if ( this.props.customizations && this.previewDocument ) {
 			debug( 'updating preview with customizations', this.props.customizations );
 			updatePreviewWithChanges( this.previewDocument, this.props.customizations );
 		}
+	},
+
+	haveCustomizationsBeenRemoved( prevProps ) {
+		return ( this.props.previewMarkup &&
+			this.props.customizations &&
+			this.props.previewMarkup === prevProps.previewMarkup &&
+			prevProps.customizations &&
+			Object.keys( this.props.customizations ).length === 0 &&
+			Object.keys( prevProps.customizations ).length > 0
+		);
 	},
 
 	loadPreview() {
