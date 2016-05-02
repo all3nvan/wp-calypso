@@ -55,13 +55,13 @@ const DesignPreview = React.createClass( {
 	},
 
 	componentDidMount() {
-		this.loadPreviewWithProps();
+		this.loadPreview();
 	},
 
 	componentDidUpdate( prevProps ) {
 		// If there is no markup, fetch it
 		if ( ! this.props.previewMarkup ) {
-			this.loadPreviewWithProps();
+			this.loadPreview();
 		}
 		// If the customizations have been removed, restore the original markup
 		if ( this.props.previewMarkup && this.props.customizations && this.props.previewMarkup === prevProps.previewMarkup && prevProps.customizations ) {
@@ -69,7 +69,7 @@ const DesignPreview = React.createClass( {
 				debug( 'restoring original markup' );
 				// Force the initial markup to be restored because the DOM may have been
 				// changed, and simply not applying customizations will not restore it.
-				this.loadPreviewWithProps();
+				this.loadPreview();
 			}
 		}
 		// Apply customizations
@@ -79,13 +79,10 @@ const DesignPreview = React.createClass( {
 		}
 	},
 
-	loadPreviewWithProps( props ) {
-		if ( ! props ) {
-			props = this.props;
-		}
-		if ( props.selectedSiteId && props.actions.fetchPreviewMarkup ) {
-			debug( 'loading preview with customizations', props.customizations );
-			props.actions.fetchPreviewMarkup( props.selectedSiteId, '', props.customizations );
+	loadPreview() {
+		if ( this.props.selectedSiteId && this.props.actions.fetchPreviewMarkup ) {
+			debug( 'loading preview with customizations', this.props.customizations );
+			this.props.actions.fetchPreviewMarkup( this.props.selectedSiteId, '', this.props.customizations );
 		}
 	},
 
@@ -162,7 +159,7 @@ function mapStateToProps( state ) {
 function mapDispatchToProps( dispatch ) {
 	return {
 		actions: bindActionCreators( PreviewActions, dispatch ),
-	}
+	};
 }
 
 export default connect(
