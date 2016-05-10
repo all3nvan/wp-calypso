@@ -17,6 +17,7 @@ import Main from 'components/main';
 import JetpackConnectNotices from './jetpack-connect-notices';
 import SiteURLInput from './site-url-input';
 import { dismissUrl, goToRemoteAuth, goToPluginInstall, goToPluginActivation, checkUrl } from 'state/jetpack-connect/actions';
+import { isUrlInSites } from 'state/sites/selectors';
 import JetpackExampleInstall from './exampleComponents/jetpack-install';
 import JetpackExampleActivate from './exampleComponents/jetpack-activate';
 import JetpackExampleConnect from './exampleComponents/jetpack-connect';
@@ -68,7 +69,7 @@ const JetpackConnectMain = React.createClass( {
 	},
 
 	onURLEnter() {
-		this.props.checkUrl( this.state.currentUrl );
+		this.props.checkUrl( this.state.currentUrl, this.props.isUrlInSites( this.state.currentUrl ) );
 	},
 
 	installJetpack() {
@@ -131,6 +132,9 @@ const JetpackConnectMain = React.createClass( {
 		if ( ! this.checkProperty( 'isJetpackConnected' ) ) {
 			return 'notConnectedJetpack';
 		}
+		if ( this.checkProperty( 'userOwnsSite' ) ) {
+			return 'alreadyOwned';
+		}
 		if ( this.checkProperty( 'isJetpackConnected' ) ) {
 			return 'alreadyConnected';
 		}
@@ -151,7 +155,7 @@ const JetpackConnectMain = React.createClass( {
 		return (
 			<Card className="jetpack-connect__site-url-input-container">
 				{ ! this.isCurrentUrlFetching() && this.isCurrentUrlFetched() && ! this.props.jetpackConnectSite.isDismissed && status
-					? <JetpackConnectNotices noticeType={ status } onDismissClick={ this.dismissUrl } />
+					? <JetpackConnectNotices noticeType={ status } onDismissClick={ this.dismissUrl } url={ this.state.currentUrl } />
 					: null
 				}
 
@@ -243,8 +247,12 @@ const JetpackConnectMain = React.createClass( {
 
 export default connect(
 	state => {
+		const checkUrlInSites = ( url ) => {
+			return isUrlInSites( state, url );
+		};
 		return {
-			jetpackConnectSite: state.jetpackConnect.jetpackConnectSite
+			jetpackConnectSite: state.jetpackConnect.jetpackConnectSite,
+			isUrlInSites: checkUrlInSites
 		};
 	},
 	dispatch => bindActionCreators( { checkUrl, dismissUrl, goToRemoteAuth, goToPluginInstall, goToPluginActivation }, dispatch )
